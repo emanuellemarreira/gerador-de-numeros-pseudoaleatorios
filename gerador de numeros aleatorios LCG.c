@@ -22,15 +22,13 @@ static inline uint64_t lcg(uint64_t *x) {
 }
 
 //funcao que compara a velocidade do lcg com o rand()
-static inline void teste_de_velocidade(){
+static inline void teste_de_velocidade(int *geracoes){
     srand(time(NULL)); //iniciar o rand com a semente baseada no tempo atual
     uint64_t x = time(NULL); //iniciar o lcg baseado no tempo atual
 
-    int geracoes[NUM_GERACOES] = {100000, 1000000, 10000000, 100000000};
-
     int i, j;
     for (i = 0; i < NUM_GERACOES; i++){
-        printf("***Comparacao de velocidades - geracao %d ***\n", geracoes[i]);
+        printf("\n***Comparacao de velocidades - geracao %d ***\n", geracoes[i]);
         
         clock_t inicio = clock();
         for (j = 0; j < geracoes[i]; j++){
@@ -54,6 +52,8 @@ int main() {
     //Estado inicial
     uint64_t x = 123456777; 
 
+    int geracoes[NUM_GERACOES] = {100000, 1000000, 10000000, 100000000};
+
    //geração de 10 numeros pseudo-aleatorios
     printf("geracao de 10 numeros pseudo-aleatorios a partir do state: %" PRIu64 "\n", x);
     for (int i = 0; i < 10; i++) {
@@ -62,7 +62,7 @@ int main() {
     }
 
     //comparacao de velocidades
-    teste_de_velocidade();
+    teste_de_velocidade(geracoes);
 
     return 0;
 }
