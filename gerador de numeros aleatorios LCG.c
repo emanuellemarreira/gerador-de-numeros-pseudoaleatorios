@@ -2,7 +2,7 @@
 //Capitulo: 7.1.2 Recommended methods for use in combined generators
 //Algoritmo: C - LCG modulo 2^64
 
-// -*- coding: utf-8 -*-
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,7 +21,7 @@ static inline uint64_t lcg(uint64_t *x) {
     return *x%10; //utiliza mod 10 para que os resultados se mantenham entre 0 e 9
 }
 
-//funcao que compara a velocidade do lcg com o rand()
+//função que compara a velocidade do lcg com o rand()
 static inline void teste_de_velocidade(int *geracoes){
     srand(time(NULL)); //iniciar o rand com a semente baseada no tempo atual
     uint64_t x = time(NULL); //iniciar o lcg baseado no tempo atual
@@ -45,7 +45,44 @@ static inline void teste_de_velocidade(int *geracoes){
         printf("- Tempo do LCG: %f segundos\n", (double)(fim - inicio) / CLOCKS_PER_SEC);
 
     }
+}
 
+//função que gera tabela de frequências do rand() e do lcg
+static inline void geracao_de_frequencias(int *geracoes, int *frequencias_rand, int *frequencias_lcg){
+    srand(time(NULL)); 
+    uint64_t x = time(NULL); 
+    int i, j;
+
+    for (i = 0; i < NUM_GERACOES; i++){
+        
+        for (j = 0; j < geracoes[i]; j++){
+            int rand_num = rand() % 10;
+            frequencias_rand[rand_num] += 1;
+        }
+        
+        
+        for (j = 0; j < geracoes[i]; j++){
+            uint64_t rand_num = lcg(&x);
+            frequencias_lcg[rand_num] += 1;
+        }
+        
+    }
+}
+
+void print_tabelas_frequencia(int *geracoes, int *frequencias_rand, int *frequencias_lcg){
+    int i,j;
+    for (i = 0; i < NUM_GERACOES; i++){
+        printf("\n***Geracao %d***\n", geracoes[i]);
+        printf("\n-rand()-\n");
+        for (j = 0; j < 10; j ++){
+            printf("  %d  |", frequencias_rand[j]);
+        }
+        printf("\n-lcg-\n");
+        for (j = 0; j < 10; j ++){
+            printf("  %d  |", frequencias_lcg[j]);
+        }
+    }
+    
 }
 
 int main() {
@@ -53,16 +90,22 @@ int main() {
     uint64_t x = 123456777; 
 
     int geracoes[NUM_GERACOES] = {100000, 1000000, 10000000, 100000000};
+    int frequencias_rand[10] = {0,0,0,0,0,0,0,0,0,0};
+    int frequencias_lcg[10] = {0,0,0,0,0,0,0,0,0,0};
 
-   //geração de 10 numeros pseudo-aleatorios
+   //geração de 10 números pseudo-aleatórios
     printf("geracao de 10 numeros pseudo-aleatorios a partir do state: %" PRIu64 "\n", x);
     for (int i = 0; i < 10; i++) {
         uint64_t rand_num = lcg(&x);
         printf("%" PRIu64 "-", rand_num);
     }
 
-    //comparacao de velocidades
-    teste_de_velocidade(geracoes);
+    //comparação de velocidades
+    ///teste_de_velocidade(geracoes);
+
+    //geração de tabela de frequências
+    geracao_de_frequencias(geracoes, frequencias_rand, frequencias_lcg);
+    print_tabelas_frequencia(geracoes, frequencias_rand, frequencias_lcg);
 
     return 0;
 }
