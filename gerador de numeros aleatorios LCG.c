@@ -111,8 +111,8 @@ void imprimir_chi_quadrado(float *chi_rand, float *chi_lcg, int *geracoes){
     int grau_de_liberdade = NUM_CATEGORIAS - 1;
     float nivel_significancia = 5/100;
     float valorcritico = valor_critico(grau_de_liberdade, nivel_significancia);
+    printf("\n==========CHI QUADRADO==========\n");
     for(int i = 0; i < NUM_GERACOES; i++){
-        printf("\n==========CHI QUADRADO==========\n");
         printf("\n=== Geracao %d ===\n", geracoes[i]);
         printf("* Chi-quadrado RAND = %f - ", chi_rand[i]);
         if(chi_rand[i] > valorcritico){
@@ -135,8 +135,7 @@ int main() {
     int frequencias_lcg[NUM_GERACOES][NUM_CATEGORIAS];
     float chi_rand[NUM_GERACOES] = {0,0,0,0};
     float chi_lcg[NUM_GERACOES] = {0,0,0,0};
-    //comparação de velocidades
-    //teste_de_velocidade(geracoes);
+    teste_de_velocidade(geracoes);
     inicializar_listas(frequencias_rand, frequencias_lcg);
     gerar_frequencias(geracoes, frequencias_rand, frequencias_lcg);
     imprimir_frequencias(geracoes,frequencias_rand,frequencias_lcg);  
